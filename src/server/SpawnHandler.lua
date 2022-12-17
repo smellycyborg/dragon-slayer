@@ -10,10 +10,21 @@ end
 function SpawnHandler.spawnSword(swords, position)
     local swords = swords:GetChildren()
     local randomIndex = math.random(1, #swords)
-    local swordClone = swords[randomIndex]:Clone()
+    local randomSword = swords[randomIndex]
+    local swordClone = randomSword.Handle:Clone()
     swordClone.Name = "Sword"
-    swordClone.Handle.Position = position
+    swordClone.Position = position
     swordClone.Parent = workspace
+
+    local proximityPrompt = Instance.new("ProximityPrompt")
+    proximityPrompt.Parent = swordClone
+
+    proximityPrompt.Triggered:Connect(function(player)
+        local randomSwordClone = randomSword:Clone()
+        randomSwordClone.Name = "Sword"
+        randomSwordClone.Parent = player.Backpack
+        swordClone:Destroy()
+    end)
 end
 
 function SpawnHandler.spawnDragons(args)

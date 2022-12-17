@@ -9,7 +9,7 @@
 - dragons have two types of attack options
 - when all dragons defeated player goes to next level
 
--- Todo dragon level labels, teleport player after slay last dragon, dragon attack adjustments
+-- teleport player after slay last dragon, dragon attack adjustments, 
 
 ]]
 
