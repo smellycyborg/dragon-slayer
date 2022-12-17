@@ -16,10 +16,12 @@ function SpawnHandler.spawnSword(swords, position)
     swordClone.Parent = workspace
 end
 
-function SpawnHandler.spawnDragons(dragons, amount, monsters)
-    local monstersToSpawn = amount
-
-    local dragons = dragons:GetChildren()
+function SpawnHandler.spawnDragons(args)
+    local dragonLevelGui = args.gui
+    local currentLevel = args.level
+    local monsters = args.monsters
+    local monstersToSpawn = args.amount
+    local dragons = args.dragons:GetChildren()
 
     for _ = 1, monstersToSpawn do
         local randomIndex = math.random(1, #dragons)
@@ -27,6 +29,10 @@ function SpawnHandler.spawnDragons(dragons, amount, monsters)
         dragonClone.Name = "Dragon"
         dragonClone.HumanoidRootPart.Position = Vector3.new(56.299, 3.448, 10.166)
         dragonClone.Parent = workspace
+
+        local dragonLevelGuiClone = dragonLevelGui:Clone()
+        dragonLevelGuiClone.TextLabel.Text = "level" .. currentLevel
+        dragonLevelGuiClone.Parent = dragonClone.Head
 
         table.insert(monsters, dragonClone)
     end

@@ -55,7 +55,7 @@ local function destroyMonsterAndSpawnSword(target)
 end
 
 local function startNextLevel(player)
-    Sdk._playerData[player].level+=1
+    Sdk:IncrementValue(player, "level", 1)
 
     local hasReachedMaxLevel = Sdk._playerData[player].level == Sdk.levelAmount + 1
     if (hasReachedMaxLevel) then
@@ -67,7 +67,13 @@ local function startNextLevel(player)
     Sdk.monsterAmount*=2
     Sdk.monsterDamage*=2
 
-    SpawnHandler.spawnDragons(Assets.Dragons, Sdk.monsterAmount, Sdk.monsters)
+    SpawnHandler.spawnDragons({
+        level = Sdk._playerData[player].level,
+        dragons = Assets.Dragons, 
+        amount = Sdk.monsterAmount, 
+        monsters = Sdk.monsters, 
+        gui = DragonLevelGui,
+    })
 
     task.spawn(function()
         while task.wait() do
@@ -151,12 +157,21 @@ local function onCharacterAdded(character)
     local player = PlayersService:GetPlayerFromCharacter(character)
     cloneSword(player)
 
-    SpawnHandler.spawnDragons(Assets.Dragons, Sdk.monsterAmount, Sdk.monsters)
-    task.spawn(function()
-        while task.wait() do
-            PathfindindHandler(Sdk.monsters, player.Character)
-        end
-    end)
+    local foundDragon = workspace:FindFirstChild("Dragon")
+    if (not foundDragon) then
+        SpawnHandler.spawnDragons({
+            level = Sdk._playerData[player].level,
+            dragons = Assets.Dragons, 
+            amount = Sdk.monsterAmount, 
+            monsters = Sdk.monsters, 
+            gui = DragonLevelGui,
+        })
+        task.spawn(function()
+            while task.wait() do
+                PathfindindHandler(Sdk.monsters, player.Character)
+            end
+        end)
+    end
 
     workspace.ChildRemoved:Connect(function(child)
         warn(child)
@@ -389,6 +404,8 @@ function Sdk.init(options)
     ShopGuiHandler.Parent = StarterPlayer.StarterCharacterScripts
     local ShopGui = script.Parent.ShopGui
     ShopGui.Parent = StarterGui
+    DragonLevelGui = script.Parent.DragonLevelGui
+    DragonLevelGui.Parent = ReplicatedStorage
 
     -- bindings
     promptPurchaseEvent.OnServerEvent:Connect(onPromptPurchaseEvent)
