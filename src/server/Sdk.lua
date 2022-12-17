@@ -9,7 +9,9 @@
 - dragons have two types of attack options
 - when all dragons defeated player goes to next level
 
--- teleport player after slay last dragon, dragon attack adjustments, 
+-- Todo dragon attack adjustments (dragon wingbeat attack pushes dragon off map)
+-- Todo add debounce for how often dragons can damage player
+-- Todo teleport player on level finish and spawn dragons after player has teleported
 
 ]]
 
