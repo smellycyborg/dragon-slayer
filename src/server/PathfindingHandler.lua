@@ -75,10 +75,6 @@ local function monsterAttackHandler(monster)
 end
 
 local function handlePathfinding(monster, character)
-    if (not character) then
-        return
-    end
-
     local monsterHumanoid = monster:FindFirstChild("Humanoid")
     if (not monsterHumanoid) then
         return
@@ -89,12 +85,20 @@ local function handlePathfinding(monster, character)
         return
     end
 
+    if (not character) then
+        return
+    end
+
     local path = PathfindingService:CreatePath()
     path:ComputeAsync(monsterRootPart.Position, character.PrimaryPart.Position)
 
     local waypoints = path:GetWaypoints()
 
     for _, waypoint in pairs(waypoints) do
+        if not monsterHumanoid then
+            break
+        end
+
         local ball = Instance.new("Part")
         ball.Shape = "Ball"
         ball.Material = "Neon"
@@ -105,7 +109,6 @@ local function handlePathfinding(monster, character)
         ball.Parent = game.Workspace
 
         monsterHumanoid:MoveTo(waypoint.Position)
-
         monsterHumanoid.MoveToFinished:Wait(MONVE_TO_FINISHED_WAIT_TIME)
     end
 end
